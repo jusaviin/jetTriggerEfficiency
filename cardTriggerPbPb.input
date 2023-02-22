@@ -1,0 +1,27 @@
+# Configuration card for energy-energy correlator jet analysis
+
+# Data type for the analysis
+DataType 1  # 0 = pp, 1 = PbPb, 2 = pp MC, 3 = PbPb MC, 4 = LocalTest
+BaseTrigger 0 # 0 = CaloJet40, 1 = CaloJet60, 2 = CaloJet80, 3 = CaloJet100, 4 = PFJet60, 5 = PFJet80, 6 = PFJet100
+
+# Cuts for jets
+JetType 3                  # 0 = Calo jets, 1 = PF CS jets, 2 = PF PU jets, 3 = PF flow CS jets
+JetAxis 1                  # 0 = Anti-kt axis, 1 = WTA
+JetEtaCut 1.6              # Region in eta around midrapidity taken into account in analysis
+MinJetPtCut 20             # Minimum pT of a jet accepted in the analysis
+MaxJetPtCut 5020           # Maximum pT of a jet accepted in the analysis
+CutBadPhi 0                # Cut the problematic phi region. 0 = No cut, 1 = crude cut
+MinMaxTrackPtFraction 0.01 # Minimum fraction of jet pT taken by the highest pT track in jet
+MaxMaxTrackPtFraction 0.98 # Maximum fraction of jet pT taken by the highest pT track in jet
+
+# Cuts for event selection
+ZVertexCut 15       # Maximum vz value for accepted tracks
+LowPtHatCut -1      # Minimum accepted pT hat
+HighPtHatCut 1      # Maximum accepted pT hat
+
+# Binning for THnSparses
+CentralityBinEdges -0.25 9.75 29.75 49.75 89.75  # Centrality binning
+PtHatBinEdges       0 30 50 80 120 170 220 280 370 460  # pT hat binning
+
+# Debug
+DebugLevel 2   # 0 = No debug messages, 1 = Some debug messages, 2 = All debug messages
