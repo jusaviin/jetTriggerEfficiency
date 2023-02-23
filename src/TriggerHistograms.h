@@ -1,4 +1,4 @@
-// Class for histograms needed in the dijet analysis
+// Class for histograms needed in the trigger analysis
 
 #ifndef TRIGGERHISTOGRAMS_H
 #define TRIGGERHISTOGRAMS_H

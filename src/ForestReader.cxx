@@ -390,6 +390,8 @@ void ForestReader::Initialize(){
     
   }
   
+  delete triggerProvider;
+  
   // Connect the branches to the skim tree (different for pp and PbPb data and Monte Carlo)
   fSkimTree->SetBranchStatus("*",0);
   // pprimaryVertexFilter && phfCoincFilter2Th4 && pclusterCompatibilityFilter

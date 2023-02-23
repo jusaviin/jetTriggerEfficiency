@@ -1,4 +1,4 @@
-// Histograms needed in the dijet analysis
+// Histograms needed in the trigger analysis
 
 // C++ includes
 #include <assert.h>
