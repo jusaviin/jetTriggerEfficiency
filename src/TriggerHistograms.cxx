@@ -22,6 +22,7 @@ TriggerHistograms::TriggerHistograms() :
   fhPtHat(0),
   fhPtHatWeighted(0),
   fhInclusiveJet(0),
+  fhLeadingJet(0),
   fCard(0)
 {
   // Default constructor
@@ -40,6 +41,7 @@ TriggerHistograms::TriggerHistograms(ConfigurationCard *newCard) :
   fhPtHat(0),
   fhPtHatWeighted(0),
   fhInclusiveJet(0),
+  fhLeadingJet(0),
   fCard(newCard)
 {
   // Custom constructor
@@ -58,6 +60,7 @@ TriggerHistograms::TriggerHistograms(const TriggerHistograms& in) :
   fhPtHat(in.fhPtHat),
   fhPtHatWeighted(in.fhPtHatWeighted),
   fhInclusiveJet(in.fhInclusiveJet),
+  fhLeadingJet(in.fhLeadingJet),
   fCard(in.fCard)
 {
   // Copy constructor
@@ -80,6 +83,7 @@ TriggerHistograms& TriggerHistograms::operator=(const TriggerHistograms& in){
   fhPtHat = in.fhPtHat;
   fhPtHatWeighted = in.fhPtHatWeighted;
   fhInclusiveJet = in.fhInclusiveJet;
+  fhLeadingJet = in.fhLeadingJet;
   fCard = in.fCard;
   
   return *this;
@@ -98,8 +102,7 @@ TriggerHistograms::~TriggerHistograms(){
   delete fhPtHat;
   delete fhPtHatWeighted;
   delete fhInclusiveJet;
-
-  
+  delete fhLeadingJet;
 }
 
 /*
@@ -235,10 +238,11 @@ void TriggerHistograms::CreateHistograms(){
   
   // Create the histogram for all jets using the above binning information
   fhInclusiveJet = new THnSparseF("inclusiveJet","inclusiveJet",nAxesJet,nBinsJet,lowBinBorderJet,highBinBorderJet); fhInclusiveJet->Sumw2();
+  fhLeadingJet = new THnSparseF("leadingJet","leadingJet",nAxesJet,nBinsJet,lowBinBorderJet,highBinBorderJet); fhLeadingJet->Sumw2();
 
   // Set custom centrality bins for histograms
   fhInclusiveJet->SetBinEdges(3,wideCentralityBins);
-  
+  fhLeadingJet->SetBinEdges(3,wideCentralityBins);
 }
 
 /*
@@ -255,6 +259,7 @@ void TriggerHistograms::Write() const{
   fhPtHat->Write();
   fhPtHatWeighted->Write();
   fhInclusiveJet->Write();
+  fhLeadingJet->Write();
   
 }
 

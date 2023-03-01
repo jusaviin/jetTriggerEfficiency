@@ -265,6 +265,9 @@ void TriggerAnalyzer::RunAnalysis(){
   Double_t jetPhi = 0;              // phi of the i:th jet in the event
   Double_t jetEta = 0;              // eta of the i:th jet in the event
   Double_t jetPtWeight = 1;         // Weighting for jet pT
+  Double_t leadingJetPt = 0;        // Leading jet pT
+  Double_t leadingJetEta = 0;       // Leading jet eta
+  Double_t leadingJetPhi = 0;       // Leading jet phi
   
   // File name helper variables
   TString currentFile;
@@ -400,6 +403,7 @@ void TriggerAnalyzer::RunAnalysis(){
       
       // Jet loop
       nJets = fJetReader->GetNJets();
+      leadingJetPt = 0; leadingJetEta = 0; leadingJetPhi = 0;
       for(Int_t jetIndex = 0; jetIndex < nJets; jetIndex++) {
         
         jetPt = fJetReader->GetJetPt(jetIndex);
@@ -433,6 +437,11 @@ void TriggerAnalyzer::RunAnalysis(){
         //         Fill histograms for all jets
         //************************************************
         
+        // Remember the leading jet
+        if(jetPt > leadingJetPt) {
+          leadingJetPt = jetPt; leadingJetEta = jetEta; leadingJetPhi = jetPhi;
+        }
+        
         // Find the pT weight for the jet
         jetPtWeight = GetJetPtWeight(jetPt);
         
@@ -457,11 +466,38 @@ void TriggerAnalyzer::RunAnalysis(){
         
       } // End of jet loop
       
+      // =============================== //
+      // Fill the leading jet histograms //
+      // =============================== //
+      
+      // Find the pT weight for the jet
+      jetPtWeight = GetJetPtWeight(leadingJetPt);
+      
+      // Fill the axes in correct order
+      fillerJet[0] = leadingJetPt;          // Axis 0 = leading jet pT
+      fillerJet[1] = leadingJetPhi;         // Axis 1 = leading jet phi
+      fillerJet[2] = leadingJetEta;         // Axis 2 = leading jet eta
+      fillerJet[3] = centrality;            // Axis 3 = centrality
+      fillerJet[4] = TriggerHistograms::kReconstructed;  // Axis 4 = Reconstruction flag
+      fillerJet[5] = TriggerHistograms::knTriggerTypes;  // Axis 5 = Trigger selection
+      
+      fHistograms->fhLeadingJet->Fill(fillerJet,fTotalEventWeight*jetPtWeight); // Fill the data point to histogram
+      
+      // Apply a trigger selection on top of the base trigger to evaluate the trigger efficiency of the other triggers
+      for(Int_t iTrigger = 0; iTrigger < TriggerHistograms::knTriggerTypes; iTrigger++){
+        if(triggerSelection[iTrigger]){
+          fillerJet[5] = iTrigger;
+          
+          fHistograms->fhLeadingJet->Fill(fillerJet,fTotalEventWeight*jetPtWeight*triggerPrescale[iTrigger]); // Fill the data point to histogram
+        }
+      }
+      
       // For MC, do another jet loop using generator level jets
       if(fDataType == ForestReader::kPpMC || fDataType == ForestReader::kPbPbMC){
         
         // Generator level jet loop
         nJets = fJetReader->GetNGeneratorJets();
+        leadingJetPt = 0; leadingJetEta = 0; leadingJetPhi = 0;
         for(Int_t jetIndex = 0; jetIndex < nJets; jetIndex++) {
           
           jetPt = fJetReader->GetGeneratorJetPt(jetIndex);
@@ -479,6 +515,11 @@ void TriggerAnalyzer::RunAnalysis(){
           //************************************************
           //     Fill histograms for generator level jets
           //************************************************
+          
+          // Remember the leading jet
+          if(jetPt > leadingJetPt) {
+            leadingJetPt = jetPt; leadingJetEta = jetEta; leadingJetPhi = jetPhi;
+          }
           
           // Find the pT weight for the jet
           jetPtWeight = GetJetPtWeight(jetPt);
@@ -504,7 +545,33 @@ void TriggerAnalyzer::RunAnalysis(){
           
         } // End of jet loop
         
-      }
+        // =============================================== //
+        // Fill the leading generator level jet histograms //
+        // =============================================== //
+        
+        // Find the pT weight for the jet
+        jetPtWeight = GetJetPtWeight(leadingJetPt);
+        
+        // Fill the axes in correct order
+        fillerJet[0] = leadingJetPt;          // Axis 0 = leading generator level jet pT
+        fillerJet[1] = leadingJetPhi;         // Axis 1 = leading generator level jet phi
+        fillerJet[2] = leadingJetEta;         // Axis 2 = leading generator level jet eta
+        fillerJet[3] = centrality;            // Axis 3 = centrality
+        fillerJet[4] = TriggerHistograms::kGeneratorLevel; // Axis 4 = Generator level flag
+        fillerJet[5] = TriggerHistograms::knTriggerTypes;  // Axis 5 = Trigger selection
+        
+        fHistograms->fhLeadingJet->Fill(fillerJet,fTotalEventWeight*jetPtWeight); // Fill the data point to histogram
+        
+        // Apply a trigger selection on top of the base trigger to evaluate the trigger efficiency of the other triggers
+        for(Int_t iTrigger = 0; iTrigger < TriggerHistograms::knTriggerTypes; iTrigger++){
+          if(triggerSelection[iTrigger]){
+            fillerJet[5] = iTrigger;
+            
+            fHistograms->fhLeadingJet->Fill(fillerJet,fTotalEventWeight*jetPtWeight*triggerPrescale[iTrigger]); // Fill the data point to histogram
+          }
+        }
+        
+      } // MC if
       
       
     } // Event loop

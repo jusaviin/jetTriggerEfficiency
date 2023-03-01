@@ -44,13 +44,15 @@ TriggerHistogramManager::TriggerHistogramManager() :
   for(int iCentrality = 0; iCentrality < kMaxCentralityBins; iCentrality++){
     for(int iDataLevel = 0; iDataLevel < TriggerHistograms::knDataLevels; iDataLevel++){
       for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
-        
-        // Jet histograms
-        fhJetPt[iCentrality][iDataLevel][iTrigger] = NULL;      // Jet pT histograms
-        fhJetPhi[iCentrality][iDataLevel][iTrigger] = NULL;     // Jet phi histograms
-        fhJetEta[iCentrality][iDataLevel][iTrigger] = NULL;     // Jet eta histograms
-        fhJetEtaPhi[iCentrality][iDataLevel][iTrigger] = NULL;  // 2D eta-phi histogram for jets
-        
+        for(int iJetType = 0; iJetType < knJetTypes; iJetType++){
+          
+          // Jet histograms
+          fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger] = NULL;      // Jet pT histograms
+          fhJetPhi[iJetType][iCentrality][iDataLevel][iTrigger] = NULL;     // Jet phi histograms
+          fhJetEta[iJetType][iCentrality][iDataLevel][iTrigger] = NULL;     // Jet eta histograms
+          fhJetEtaPhi[iJetType][iCentrality][iDataLevel][iTrigger] = NULL;  // 2D eta-phi histogram for jets
+          
+        } // Jet type loop
       } // Trigger selection loop
     } // Data level loop
   } // Centrality loop
@@ -148,13 +150,15 @@ TriggerHistogramManager::TriggerHistogramManager(const TriggerHistogramManager& 
   for(int iCentrality = 0; iCentrality < kMaxCentralityBins; iCentrality++){
     for(int iDataLevel = 0; iDataLevel < TriggerHistograms::knDataLevels; iDataLevel++){
       for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
-        
-        // Jet histograms
-        fhJetPt[iCentrality][iDataLevel][iTrigger] = in.fhJetPt[iCentrality][iDataLevel][iTrigger];         // Jet pT histograms
-        fhJetPhi[iCentrality][iDataLevel][iTrigger] = in.fhJetPhi[iCentrality][iDataLevel][iTrigger];       // Jet phi histograms
-        fhJetEta[iCentrality][iDataLevel][iTrigger] = in.fhJetEta[iCentrality][iDataLevel][iTrigger];       // Jet eta histograms
-        fhJetEtaPhi[iCentrality][iDataLevel][iTrigger] = in.fhJetEtaPhi[iCentrality][iDataLevel][iTrigger]; // 2D eta-phi histogram for jets
-        
+        for(int iJetType = 0; iJetType < knJetTypes; iJetType++){
+          
+          // Jet histograms
+          fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger] = in.fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger];         // Jet pT histograms
+          fhJetPhi[iJetType][iCentrality][iDataLevel][iTrigger] = in.fhJetPhi[iJetType][iCentrality][iDataLevel][iTrigger];       // Jet phi histograms
+          fhJetEta[iJetType][iCentrality][iDataLevel][iTrigger] = in.fhJetEta[iJetType][iCentrality][iDataLevel][iTrigger];       // Jet eta histograms
+          fhJetEtaPhi[iJetType][iCentrality][iDataLevel][iTrigger] = in.fhJetEtaPhi[iJetType][iCentrality][iDataLevel][iTrigger]; // 2D eta-phi histogram for jets
+          
+        } // Jet type loop
       } // Trigger selection loop
     } // Data level loop
   } // Centrality loop
@@ -240,16 +244,20 @@ void TriggerHistogramManager::LoadJetHistograms(){
         // Apply trigger selection on top of the base trigger
         axisIndices[2] = 5; lowLimits[2] = iTrigger+1; highLimits[2] = iTrigger+1;
         
-        // Always load jet pT histograms
-        fhJetPt[iCentralityBin][iDataLevel][iTrigger] = FindHistogram(fInputFile,fJetHistogramName,0,nAxes,axisIndices,lowLimits,highLimits);
-        
-        if(!fLoadJets) continue;  // Only load the remaining jet histograms if selected
-        
-        fhJetPhi[iCentralityBin][iDataLevel][iTrigger] = FindHistogram(fInputFile,fJetHistogramName,1,nAxes,axisIndices,lowLimits,highLimits);
-        fhJetEta[iCentralityBin][iDataLevel][iTrigger] = FindHistogram(fInputFile,fJetHistogramName,2,nAxes,axisIndices,lowLimits,highLimits);
-        if(fLoad2DHistograms) fhJetEtaPhi[iCentralityBin][iDataLevel][iTrigger] = FindHistogram2D(fInputFile,fJetHistogramName,1,2,nAxes,axisIndices,lowLimits,highLimits);
-        
-      }
+        for(int iJetType = 0; iJetType < knJetTypes; iJetType++){
+          
+          // Always load jet pT histograms
+          fhJetPt[iJetType][iCentralityBin][iDataLevel][iTrigger] = FindHistogram(fInputFile,fJetHistogramName[iJetType],0,nAxes,axisIndices,lowLimits,highLimits);
+          
+          
+          if(!fLoadJets) continue;  // Only load the remaining jet histograms if selected
+          
+          fhJetPhi[iJetType][iCentralityBin][iDataLevel][iTrigger] = FindHistogram(fInputFile,fJetHistogramName[iJetType],1,nAxes,axisIndices,lowLimits,highLimits);
+          fhJetEta[iJetType][iCentralityBin][iDataLevel][iTrigger] = FindHistogram(fInputFile,fJetHistogramName[iJetType],2,nAxes,axisIndices,lowLimits,highLimits);
+          if(fLoad2DHistograms) fhJetEtaPhi[iJetType][iCentralityBin][iDataLevel][iTrigger] = FindHistogram2D(fInputFile,fJetHistogramName[iJetType],1,2,nAxes,axisIndices,lowLimits,highLimits);
+          
+        } // Jet type loop
+      } // Trigger selection loop
       
     } // Data level loop
     
@@ -451,48 +459,50 @@ void TriggerHistogramManager::WriteJetHistograms(){
   // Write the jet histograms to the output file
   if(!fLoadJets) return;  // Only write the jet histograms if they are loaded
   
-  for(int iDataLevel = 0; iDataLevel < TriggerHistograms::knDataLevels; iDataLevel++){
-    
-    // Create a directory for the histograms if it does not already exist
-    histogramNamer = Form("%s%s", fJetHistogramName, fDataLevelName[iDataLevel]);
-    if(!gDirectory->GetDirectory(histogramNamer)) gDirectory->mkdir(histogramNamer);
-    gDirectory->cd(histogramNamer);
-    
-    for(int iCentralityBin = fFirstLoadedCentralityBin; iCentralityBin <= fLastLoadedCentralityBin; iCentralityBin++){
-      for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
-        
-        // Check that the histograms are actually there before trying to save them.
-        if(fhJetPt[iCentralityBin][iDataLevel][iTrigger] == NULL) {
-          cout << "Could not find histograms of type " << fJetHistogramName << " to write. Will skip writing these." << endl;
-          continue;
-        }
-        
-        triggerNamer = "_" + triggerProvider->GetTriggerName(iTrigger);
-        if(iTrigger == TriggerHistograms::knTriggerTypes) triggerNamer = "";
-        
-        // Jet pT
-        histogramNamer = Form("%sPt%s_C%d",fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        if(fhJetPt[iCentralityBin][iDataLevel][iTrigger]) fhJetPt[iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
-        
-        // Jet phi
-        histogramNamer = Form("%sPhi%s_C%d",fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        if(fhJetPhi[iCentralityBin][iDataLevel][iTrigger]) fhJetPhi[iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
-        
-        // Jet eta
-        histogramNamer = Form("%sEta%s_C%d",fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        if(fhJetEta[iCentralityBin][iDataLevel][iTrigger]) fhJetEta[iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
-        
-        // Jet eta-phi
-        histogramNamer = Form("%sEtaPhi%s_C%d",fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        if(fLoad2DHistograms && fhJetEtaPhi[iCentralityBin][iDataLevel][iTrigger]) fhJetEtaPhi[iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
-        
-      } // Trigger selection loop
-    } // Loop over centrality bins
-    
-    // Return back to main directory
-    gDirectory->cd("../");
-    
-  } // Data level loop
+  for(int iJetType = 0; iJetType < knJetTypes; iJetType++){
+    for(int iDataLevel = 0; iDataLevel < TriggerHistograms::knDataLevels; iDataLevel++){
+      
+      // Create a directory for the histograms if it does not already exist
+      histogramNamer = Form("%s%s", fJetHistogramName[iJetType], fDataLevelName[iDataLevel]);
+      if(!gDirectory->GetDirectory(histogramNamer)) gDirectory->mkdir(histogramNamer);
+      gDirectory->cd(histogramNamer);
+      
+      for(int iCentralityBin = fFirstLoadedCentralityBin; iCentralityBin <= fLastLoadedCentralityBin; iCentralityBin++){
+        for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
+          
+          // Check that the histograms are actually there before trying to save them.
+          if(fhJetPt[iJetType][iCentralityBin][iDataLevel][iTrigger] == NULL) {
+            cout << "Could not find histograms of type " << fJetHistogramName[iJetType] << " to write. Will skip writing these." << endl;
+            continue;
+          }
+          
+          triggerNamer = "_" + triggerProvider->GetTriggerName(iTrigger);
+          if(iTrigger == TriggerHistograms::knTriggerTypes) triggerNamer = "";
+          
+          // Jet pT
+          histogramNamer = Form("%sPt%s_C%d",fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          if(fhJetPt[iJetType][iCentralityBin][iDataLevel][iTrigger]) fhJetPt[iJetType][iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
+          
+          // Jet phi
+          histogramNamer = Form("%sPhi%s_C%d",fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          if(fhJetPhi[iJetType][iCentralityBin][iDataLevel][iTrigger]) fhJetPhi[iJetType][iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
+          
+          // Jet eta
+          histogramNamer = Form("%sEta%s_C%d",fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          if(fhJetEta[iJetType][iCentralityBin][iDataLevel][iTrigger]) fhJetEta[iJetType][iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
+          
+          // Jet eta-phi
+          histogramNamer = Form("%sEtaPhi%s_C%d",fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          if(fLoad2DHistograms && fhJetEtaPhi[iJetType][iCentralityBin][iDataLevel][iTrigger]) fhJetEtaPhi[iJetType][iCentralityBin][iDataLevel][iTrigger]->Write(histogramNamer.Data(), TObject::kOverwrite);
+          
+        } // Trigger selection loop
+      } // Loop over centrality bins
+      
+      // Return back to main directory
+      gDirectory->cd("../");
+      
+    } // Data level loop
+  } // Jet type loop
    
   delete triggerProvider;
   
@@ -522,34 +532,38 @@ void TriggerHistogramManager::LoadProcessedHistograms(){
   }
   
   // Load the jet histograms from the input file
-  for(int iCentralityBin = fFirstLoadedCentralityBin; iCentralityBin <= fLastLoadedCentralityBin; iCentralityBin++){
+  for(int iJetType = 0; iJetType < knJetTypes; iJetType++){
     for(int iDataLevel = 0; iDataLevel < TriggerHistograms::knDataLevels; iDataLevel++){
-      for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
+      for(int iCentralityBin = fFirstLoadedCentralityBin; iCentralityBin <= fLastLoadedCentralityBin; iCentralityBin++){
         
-        triggerNamer = "_" + triggerProvider->GetTriggerName(iTrigger);
-        if(iTrigger == TriggerHistograms::knTriggerTypes) triggerNamer = "";
+        for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
+          
+          triggerNamer = "_" + triggerProvider->GetTriggerName(iTrigger);
+          if(iTrigger == TriggerHistograms::knTriggerTypes) triggerNamer = "";
+          
+          // Always load jet pT histograms
+          histogramNamer = Form("%s%s/%sPt%s_C%d", fJetHistogramName[iJetType], fDataLevelName[iDataLevel], fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          fhJetPt[iJetType][iCentralityBin][iDataLevel][iTrigger] = (TH1D*) fInputFile->Get(histogramNamer.Data());
+          
+          if(!fLoadJets) continue;  // Only load the loaded the selected histograms
+          
+          // Jet phi
+          histogramNamer = Form("%s%s/%sPhi%s_C%d", fJetHistogramName[iJetType], fDataLevelName[iDataLevel], fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          fhJetPhi[iJetType][iCentralityBin][iDataLevel][iTrigger] = (TH1D*) fInputFile->Get(histogramNamer.Data());
+          
+          // Jet eta
+          histogramNamer = Form("%s%s/%sEta%s_C%d", fJetHistogramName[iJetType], fDataLevelName[iDataLevel], fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          fhJetEta[iJetType][iCentralityBin][iDataLevel][iTrigger] = (TH1D*) fInputFile->Get(histogramNamer.Data());
+          
+          // Jet eta-phi
+          histogramNamer = Form("%s%s/%sEtaPhi%s_C%d", fJetHistogramName[iJetType], fDataLevelName[iDataLevel], fJetHistogramName[iJetType], triggerNamer.Data(), iCentralityBin);
+          if(fLoad2DHistograms) fhJetEtaPhi[iJetType][iCentralityBin][iDataLevel][iTrigger] = (TH2D*) fInputFile->Get(histogramNamer.Data());
+          
+        } // Jet trigger selection loop
         
-        // Always load jet pT histograms
-        histogramNamer = Form("%s%s/%sPt%s_C%d", fJetHistogramName, fDataLevelName[iDataLevel], fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        fhJetPt[iCentralityBin][iDataLevel][iTrigger] = (TH1D*) fInputFile->Get(histogramNamer.Data());
-        
-        if(!fLoadJets) continue;  // Only load the loaded the selected histograms
-        
-        // Jet phi
-        histogramNamer = Form("%s%s/%sPhi%s_C%d", fJetHistogramName, fDataLevelName[iDataLevel], fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        fhJetPhi[iCentralityBin][iDataLevel][iTrigger] = (TH1D*) fInputFile->Get(histogramNamer.Data());
-        
-        // Jet eta
-        histogramNamer = Form("%s%s/%sEta%s_C%d", fJetHistogramName, fDataLevelName[iDataLevel], fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        fhJetEta[iCentralityBin][iDataLevel][iTrigger] = (TH1D*) fInputFile->Get(histogramNamer.Data());
-        
-        // Jet eta-phi
-        histogramNamer = Form("%s%s/%sEtaPhi%s_C%d", fJetHistogramName, fDataLevelName[iDataLevel], fJetHistogramName, triggerNamer.Data(), iCentralityBin);
-        if(fLoad2DHistograms) fhJetEtaPhi[iCentralityBin][iDataLevel][iTrigger] = (TH2D*) fInputFile->Get(histogramNamer.Data());
-        
-      } // Jet trigger selection loop
+      } // Loop over centrality bins
     } // Data level loop
-  } // Loop over centrality bins
+  } // Jet type loop
   
   delete triggerProvider;
 }
@@ -632,7 +646,7 @@ void TriggerHistogramManager::SetGenericBins(const bool readBinsFromFile, const 
  */
 void TriggerHistogramManager::SetCentralityBins(const bool readBinsFromFile, const int nBins, const double *binBorders, const bool setIndices){
   
-  SetGenericBins(readBinsFromFile, fJetHistogramName, 3, fnCentralityBins, fCentralityBinBorders, fCentralityBinIndices, nBins, binBorders, "centrality", kMaxCentralityBins, setIndices);
+  SetGenericBins(readBinsFromFile, fJetHistogramName[0], 3, fnCentralityBins, fCentralityBinBorders, fCentralityBinIndices, nBins, binBorders, "centrality", kMaxCentralityBins, setIndices);
   
 }
 
@@ -680,13 +694,13 @@ int TriggerHistogramManager::GetNCentralityBins() const{
 }
 
 // Getter for the jet histogram name
-const char* TriggerHistogramManager::GetJetHistogramName() const{
-  return fJetHistogramName;
+const char* TriggerHistogramManager::GetJetHistogramName(const int iJetType) const{
+  return fJetHistogramName[iJetType];
 }
 
 // Getter for name suitable for x-axis in a given jet histogram
-const char* TriggerHistogramManager::GetJetAxisName() const{
-  return fJetAxisName;
+const char* TriggerHistogramManager::GetJetAxisName(const int iJetType) const{
+  return fJetAxisName[iJetType];
 }
 
 // Getter for collision system
@@ -729,27 +743,27 @@ TH1D* TriggerHistogramManager::GetHistogramCentralityWeighted() const{
 // Getters for jet histograms
 
 // Getter for jet pT histograms
-TH1D* TriggerHistogramManager::GetHistogramJetPt(int iCentrality, const int iDataLevel, const int iTrigger) const{
+TH1D* TriggerHistogramManager::GetHistogramJetPt(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const{
   if(fCard->GetDataType().Contains("pp",TString::kIgnoreCase)) iCentrality = 0;  // No centrality selection for pp
-  return fhJetPt[iCentrality][iDataLevel][iTrigger];
+  return fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger];
 }
 
 // Getter for jet phi histograms
-TH1D* TriggerHistogramManager::GetHistogramJetPhi(int iCentrality, const int iDataLevel, const int iTrigger) const{
+TH1D* TriggerHistogramManager::GetHistogramJetPhi(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const{
   if(fCard->GetDataType().Contains("pp",TString::kIgnoreCase)) iCentrality = 0;  // No centrality selection for pp
-  return fhJetPhi[iCentrality][iDataLevel][iTrigger];
+  return fhJetPhi[iJetType][iCentrality][iDataLevel][iTrigger];
 }
 
 // Getter for jet eta histograms
-TH1D* TriggerHistogramManager::GetHistogramJetEta(int iCentrality, const int iDataLevel, const int iTrigger) const{
+TH1D* TriggerHistogramManager::GetHistogramJetEta(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const{
   if(fCard->GetDataType().Contains("pp",TString::kIgnoreCase)) iCentrality = 0;  // No centrality selection for pp
-  return fhJetEta[iCentrality][iDataLevel][iTrigger];
+  return fhJetEta[iJetType][iCentrality][iDataLevel][iTrigger];
 }
 
 // Getter for 2D eta-phi histogram for jets
-TH2D* TriggerHistogramManager::GetHistogramJetEtaPhi(int iCentrality, const int iDataLevel, const int iTrigger) const{
+TH2D* TriggerHistogramManager::GetHistogramJetEtaPhi(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const{
   if(fCard->GetDataType().Contains("pp",TString::kIgnoreCase)) iCentrality = 0;  // No centrality selection for pp
-  return fhJetEtaPhi[iCentrality][iDataLevel][iTrigger];
+  return fhJetEtaPhi[iJetType][iCentrality][iDataLevel][iTrigger];
 }
 
 // Get the first loaded centrality bin
@@ -773,8 +787,8 @@ TriggerCard* TriggerHistogramManager::GetCard() const{
 }
 
 // Getter for integral over inclusive jet pT. Include the overflow bin in the integral.
-double TriggerHistogramManager::GetJetPtIntegral(const int iCentrality, const int iDataLevel, const int iTrigger) const{
-  return fhJetPt[iCentrality][iDataLevel][iTrigger]->Integral(1,fhJetPt[iCentrality][iDataLevel][iTrigger]->GetNbinsX()+1,"width");
+double TriggerHistogramManager::GetJetPtIntegral(const int iJetType, const int iCentrality, const int iDataLevel, const int iTrigger) const{
+  return fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger]->Integral(1,fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger]->GetNbinsX()+1,"width");
 }
 
 /*
@@ -784,6 +798,6 @@ double TriggerHistogramManager::GetJetPtIntegral(const int iCentrality, const in
  *  const double minPt = Lower pT range for integral calculation
  *  const double maxPt = Higher pT range for integral calculation
  */
-double TriggerHistogramManager::GetJetPtIntegral(const int iCentrality, const int iDataLevel, const int iTrigger, const double minPt, const double maxPt) const{
-  return fhJetPt[iCentrality][iDataLevel][iTrigger]->Integral(fhJetPt[iCentrality][iDataLevel][iTrigger]->FindBin(minPt+0.001), fhJetPt[iCentrality][iDataLevel][iTrigger]->FindBin(maxPt-0.001), "width");
+double TriggerHistogramManager::GetJetPtIntegral(const int iJetType, const int iCentrality, const int iDataLevel, const int iTrigger, const double minPt, const double maxPt) const{
+  return fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger]->Integral(fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger]->FindBin(minPt+0.001), fhJetPt[iJetType][iCentrality][iDataLevel][iTrigger]->FindBin(maxPt-0.001), "width");
 }

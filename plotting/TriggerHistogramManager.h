@@ -24,11 +24,14 @@ public:
   // Dimensions for histogram arrays
   static const int kMaxCentralityBins = 5;       // Maximum allowed number of centrality bins
   
+  // Available jet types
+  enum enumDataLevel {kInclusiveJet, kLeadingJet, knJetTypes};
+  
 private:
   
   // Naming for jet histograms
-  const char* fJetHistogramName = "inclusiveJet";
-  const char* fJetAxisName = "Jet";
+  const char* fJetHistogramName[knJetTypes] = {"inclusiveJet", "leadingJet"};
+  const char* fJetAxisName[knJetTypes] = {"Jet", "Leading jet"};
   
   // Naming for data levels
   const char* fDataLevelName[TriggerHistograms::knDataLevels] = {"", "GeneratorLevel"};
@@ -65,8 +68,8 @@ public:
   double GetCentralityBinBorder(const int iCentrality) const;  // Getter for i:th centrality bin border
   
   // Getters for histogram and axis naming
-  const char* GetJetHistogramName() const; // Getter for the jet histogram name
-  const char* GetJetAxisName() const;      // Getter for name suitable for x-axis in a jet histogram
+  const char* GetJetHistogramName(const int iJetType) const; // Getter for the jet histogram name
+  const char* GetJetAxisName(const int iJetType) const;      // Getter for name suitable for x-axis in a jet histogram
   
   TString GetSystem() const;  // Getter for collision system
   
@@ -77,11 +80,11 @@ public:
   TH1D* GetHistogramCentrality() const;         // Getter for centrality histogram in all events
   TH1D* GetHistogramCentralityWeighted() const; // Getter for weighted centrality histogram in all events
   
-  // Getters for jet histograms
-  TH1D* GetHistogramJetPt(int iCentrality, const int iDataLevel, const int iTrigger) const;     // Jet pT histograms
-  TH1D* GetHistogramJetPhi(int iCentrality, const int iDataLevel, const int iTrigger) const;    // Jet phi histograms
-  TH1D* GetHistogramJetEta(int iCentrality, const int iDataLevel, const int iTrigger) const;    // Jet eta histograms
-  TH2D* GetHistogramJetEtaPhi(int iCentrality, const int iDataLevel, const int iTrigger) const; // 2D eta-phi histogram for jets
+  // Getters for inclusive jet histograms
+  TH1D* GetHistogramJetPt(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const;     // Jet pT histograms
+  TH1D* GetHistogramJetPhi(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const;    // Jet phi histograms
+  TH1D* GetHistogramJetEta(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const;    // Jet eta histograms
+  TH2D* GetHistogramJetEtaPhi(const int iJetType, int iCentrality, const int iDataLevel, const int iTrigger) const; // 2D eta-phi histogram for jets
   
   // Getters for the loaded centrality bins
   int GetFirstCentralityBin() const;  // Get the first loaded centrality bin
@@ -89,8 +92,8 @@ public:
   
   // Getters for normalization information
   int GetNEvents() const;                      // Getter for the number of events passing the cuts
-  double GetJetPtIntegral(const int iCentrality, const int iDataLevel, const int iTrigger) const; // Getter for integral over inclusive jet pT in a given centrality
-  double GetJetPtIntegral(int iCentrality, const int iDataLevel, const int iTrigger, const double minPt, const double maxPt) const; // Getter for integral over inclusive jet pT in a given pT range within a given centrality bin
+  double GetJetPtIntegral(const int iJetType, const int iCentrality, const int iDataLevel, const int iTrigger) const; // Getter for integral over inclusive jet pT in a given centrality
+  double GetJetPtIntegral(const int iJetType, const int iCentrality, const int iDataLevel, const int iTrigger, const double minPt, const double maxPt) const; // Getter for integral over inclusive jet pT in a given pT range within a given centrality bin
   
   // Getter for the card
   TriggerCard* GetCard() const;  // Getter for the JCard
@@ -138,11 +141,11 @@ private:
   TH1D *fhPtHat;              // pT hat for MC events (only meaningful for MC)
   TH1D *fhPtHatWeighted;      // Weighted pT hat distribution (only meaningful for MC)
   
-  // Histograms for jets
-  TH1D *fhJetPt[kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];      // Jet pT histograms
-  TH1D *fhJetPhi[kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];     // Jet phi histograms
-  TH1D *fhJetEta[kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];     // Jet eta histograms
-  TH2D *fhJetEtaPhi[kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];  // 2D eta-phi histogram for jets
+  // Histograms for inclusive jets
+  TH1D *fhJetPt[knJetTypes][kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];      // Jet pT histograms
+  TH1D *fhJetPhi[knJetTypes][kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];     // Jet phi histograms
+  TH1D *fhJetEta[knJetTypes][kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];     // Jet eta histograms
+  TH2D *fhJetEtaPhi[knJetTypes][kMaxCentralityBins][TriggerHistograms::knDataLevels][TriggerHistograms::knTriggerTypes+1];  // 2D eta-phi histogram for jets
   
   // Private methods
   void InitializeFromCard(); // Initialize several member variables from TriggerCard
