@@ -363,10 +363,12 @@ void ForestReader::Initialize(){
     for(Int_t iTrigger = TriggerHistograms::kCalo40; iTrigger <= TriggerHistograms::kPF100; iTrigger++){
       fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()),1);
       fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetFilterBit[iTrigger], &fJetFilterBranch[iTrigger]);
-      fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_PrescaleNumerator", triggerProvider->GetTriggerName(iTrigger).Data()),1);
-      fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_PrescaleNumerator", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleNumerator[iTrigger], &fJetFilterPrescaleNumeratorBranch[iTrigger]);
-      fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_PrescaleDenominator", triggerProvider->GetTriggerName(iTrigger).Data()),1);
-      fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_PrescaleDenominator", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleDenominator[iTrigger], &fJetFilterPrescaleDenominatorBranch[iTrigger]);
+      fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_Prescl", triggerProvider->GetTriggerName(iTrigger).Data()),1);
+      fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_Prescl", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleNumerator[iTrigger], &fJetFilterPrescaleNumeratorBranch[iTrigger]);
+      
+      
+      // Only integer prescales for AOD
+      fJetPrescaleDenominator[iTrigger] = 1;
     }
 
   } else { // PbPb data or MC

@@ -9,9 +9,10 @@
 void triggerEfficiencyPlotter(){
   
   // File containing the base trigger jet spectrum and selected trigger jet spectra on top of that
-  TString fileName = "data/triggerAnalysis_akFlowJets_eta1v6_baseCalo60_processed_2023-02-22.root";
+  TString fileName = "data/triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root";
   
-  // triggerAnalysis_akFlowJets_eta1v6_baseCalo60_processed_2023-02-22.root
+  // triggerAnalysis_akFlowJets_cutBadPhi_eta1v6_baseCalo60_processed_2023-03-01.root
+  // triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root
   // triggerAnalysis_akFlowJets_eta1v6_baseCalo40_processed_2023-02-22.root
   
   // Open the file and check that it exists
@@ -49,7 +50,7 @@ void triggerEfficiencyPlotter(){
   drawJets[TriggerHistogramManager::kLeadingJet] = false;
   
   // Figure saving
-  const bool saveFigures = false;  // Save figures
+  const bool saveFigures = true;  // Save figures
   const char* saveComment = "_base60Comparison";   // Comment given for this specific file
   const char* figureFormat = "pdf"; // Format given for the figures
   
