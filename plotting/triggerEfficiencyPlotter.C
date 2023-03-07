@@ -9,7 +9,7 @@
 void triggerEfficiencyPlotter(){
   
   // File containing the base trigger jet spectrum and selected trigger jet spectra on top of that
-  TString fileName = "data/triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root";
+  TString fileName = "data/triggerAnalysis_pp_akPfJets_eta1v6_baseCalo40_450kEvents_processed_2023-03-07.root";
   
   // triggerAnalysis_akFlowJets_cutBadPhi_eta1v6_baseCalo60_processed_2023-03-01.root
   // triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root
