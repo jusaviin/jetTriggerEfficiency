@@ -4,7 +4,7 @@
 #include "../src/TriggerHistograms.h"
 
 /*
- * Macro for comparing weighted and un-weighted Monte Carlo simulations with data
+ * Macro for plotting trigger efficiency curves from the data
  */
 void triggerEfficiencyPlotter(){
   

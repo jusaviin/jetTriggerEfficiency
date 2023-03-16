@@ -2,13 +2,13 @@
 
 # Data type for the analysis
 DataType 0  # 0 = pp, 1 = PbPb, 2 = pp MC, 3 = PbPb MC, 4 = LocalTest
-BaseTrigger 0 # 0 = CaloJet40, 1 = CaloJet60, 2 = CaloJet80, 3 = CaloJet100, 4 = PFJet60, 5 = PFJet80, 6 = PFJet100
+BaseTrigger 3 # 0 = CaloJet40, 1 = CaloJet60, 2 = CaloJet80, 3 = CaloJet100, 4 = PFJet60, 5 = PFJet80, 6 = PFJet100
 
 # Cuts for jets
 JetType 1                  # 0 = Calo jets, 1 = PF jets
-JetAxis 1                  # 0 = Anti-kt axis, 1 = WTA
+JetAxis 0                  # 0 = Anti-kt axis, 1 = WTA
 JetEtaCut 1.6              # Region in eta around midrapidity taken into account in analysis
-MinJetPtCut 20             # Minimum pT of a jet accepted in the analysis
+MinJetPtCut 120             # Minimum pT of a jet accepted in the analysis
 MaxJetPtCut 5020           # Maximum pT of a jet accepted in the analysis
 CutBadPhi 0                # Cut the problematic phi region. 0 = No cut, 1 = crude cut
 MinMaxTrackPtFraction 0.01 # Minimum fraction of jet pT taken by the highest pT track in jet

@@ -69,6 +69,8 @@ public:
   Float_t GetGeneratorJetPt(Int_t iJet) const;       // Getter for generator level jet pT
   Float_t GetGeneratorJetPhi(Int_t iJet) const;      // Getter for generator level jet phi
   Float_t GetGeneratorJetEta(Int_t iJet) const;      // Getter for generator level jet eta
+  Float_t GetGeneratorJetWTAPhi(Int_t iJet) const;   // Getter for generator level jet WTA phi
+  Float_t GetGeneratorJetWTAEta(Int_t iJet) const;   // Getter for generator level jet WTA eta
   
   // Getters for leaves in HLT tree
   Int_t GetBaseJetFilterBit() const;                    // Getter for base jet filter bit
@@ -119,6 +121,8 @@ private:
   TBranch *fGenJetPtBranch;      // Branch for generator level jet pT
   TBranch *fGenJetPhiBranch;     // Branch for generator level jet phi
   TBranch *fGenJetEtaBranch;     // Branch for generator level jet eta
+  TBranch *fGenJetWTAPhiBranch;     // Branch for generator level jet phi
+  TBranch *fGenJetWTAEtaBranch;     // Branch for generator level jet eta
   
   // Branches for HLT tree
   TBranch *fJetFilterBranch[TriggerHistograms::knTriggerTypes];  // Branches for all jet trigger bits that are studied
@@ -150,6 +154,8 @@ private:
   Float_t fGenJetPtArray[fnMaxJet] = {0};      // pT:s of the generator level jets in an event
   Float_t fGenJetPhiArray[fnMaxJet] = {0};     // phis of the generator level jets in an event
   Float_t fGenJetEtaArray[fnMaxJet] = {0};     // etas of the generator level jets in an event
+  Float_t fGenJetWTAPhiArray[fnMaxJet] = {0};  // WTA phis of the generator level jets in an event
+  Float_t fGenJetWTAEtaArray[fnMaxJet] = {0};  // WTA etas of the generator level jets in an event
   
   // Leaves for the HLT tree
   Int_t fJetFilterBit[TriggerHistograms::knTriggerTypes];  // Filter bits for all jet triggers

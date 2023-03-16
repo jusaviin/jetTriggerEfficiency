@@ -30,6 +30,8 @@ ForestReader::ForestReader() :
   fGenJetPtBranch(0),
   fGenJetPhiBranch(0),
   fGenJetEtaBranch(0),
+  fGenJetWTAPhiBranch(0),
+  fGenJetWTAEtaBranch(0),
   fPrimaryVertexBranch(0),
   fBeamScrapingBranch(0),
   fHfCoincidenceBranch(0),
@@ -102,6 +104,8 @@ ForestReader::ForestReader(Int_t dataType, Int_t jetType, Int_t jetAxis, Int_t b
   fGenJetPtBranch(0),
   fGenJetPhiBranch(0),
   fGenJetEtaBranch(0),
+  fGenJetWTAPhiBranch(0),
+  fGenJetWTAEtaBranch(0),
   fPrimaryVertexBranch(0),
   fBeamScrapingBranch(0),
   fHfCoincidenceBranch(0),
@@ -168,6 +172,8 @@ ForestReader::ForestReader(const ForestReader& in) :
   fGenJetPtBranch(in.fGenJetPtBranch),
   fGenJetPhiBranch(in.fGenJetPhiBranch),
   fGenJetEtaBranch(in.fGenJetEtaBranch),
+  fGenJetWTAPhiBranch(in.fGenJetWTAPhiBranch),
+  fGenJetWTAEtaBranch(in.fGenJetWTAEtaBranch),
   fPrimaryVertexBranch(in.fPrimaryVertexBranch),
   fBeamScrapingBranch(in.fBeamScrapingBranch),
   fHfCoincidenceBranch(in.fHfCoincidenceBranch),
@@ -235,6 +241,8 @@ ForestReader& ForestReader::operator=(const ForestReader& in){
   fGenJetPtBranch = in.fGenJetPtBranch;
   fGenJetPhiBranch = in.fGenJetPhiBranch;
   fGenJetEtaBranch = in.fGenJetEtaBranch;
+  fGenJetWTAPhiBranch = in.fGenJetWTAPhiBranch;
+  fGenJetWTAEtaBranch = in.fGenJetWTAEtaBranch;
   fPrimaryVertexBranch = in.fPrimaryVertexBranch;
   fBeamScrapingBranch = in.fBeamScrapingBranch;
   fHfCoincidenceBranch = in.fHfCoincidenceBranch;
@@ -330,15 +338,17 @@ void ForestReader::Initialize(){
     fJetTree->SetBranchStatus("genpt",1);
     fJetTree->SetBranchAddress("genpt",&fGenJetPtArray,&fGenJetPtBranch);
     
-    // If specified, select WTA axis for jet phi
-    sprintf(branchName,"%sgenphi",genJetAxis[fJetAxis]);
-    fJetTree->SetBranchStatus(branchName,1);
-    fJetTree->SetBranchAddress(branchName,&fGenJetPhiArray,&fGenJetPhiBranch);
+    fJetTree->SetBranchStatus("genphi",1);
+    fJetTree->SetBranchAddress("genphi",&fGenJetPhiArray,&fGenJetPhiBranch);
     
-    // If specified, select WTA axis for jet eta
-    sprintf(branchName,"%sgeneta",genJetAxis[fJetAxis]);
-    fJetTree->SetBranchStatus(branchName,1);
-    fJetTree->SetBranchAddress(branchName,&fGenJetEtaArray,&fGenJetEtaBranch);
+    fJetTree->SetBranchStatus("geneta",1);
+    fJetTree->SetBranchAddress("geneta",&fGenJetEtaArray,&fGenJetEtaBranch);
+    
+    fJetTree->SetBranchStatus("WTAgenphi",1);
+    fJetTree->SetBranchAddress("WTAgenphi",&fGenJetWTAPhiArray,&fGenJetWTAPhiBranch);
+    
+    fJetTree->SetBranchStatus("WTAgeneta",1);
+    fJetTree->SetBranchAddress("WTAgeneta",&fGenJetWTAEtaArray,&fGenJetWTAEtaBranch);
     
     fJetTree->SetBranchStatus("ngen",1);
     fJetTree->SetBranchAddress("ngen",&fnGenJets,&fnGenJetsBranch);
@@ -566,6 +576,16 @@ Float_t ForestReader::GetGeneratorJetPhi(Int_t iJet) const{
 // Getter for generator level jet eta
 Float_t ForestReader::GetGeneratorJetEta(Int_t iJet) const{
   return fGenJetEtaArray[iJet];
+}
+
+// Getter for generator level jet phi
+Float_t ForestReader::GetGeneratorJetWTAPhi(Int_t iJet) const{
+  return fGenJetWTAPhiArray[iJet];
+}
+
+// Getter for generator level jet eta
+Float_t ForestReader::GetGeneratorJetWTAEta(Int_t iJet) const{
+  return fGenJetWTAEtaArray[iJet];
 }
 
 // Getter for vertex z position

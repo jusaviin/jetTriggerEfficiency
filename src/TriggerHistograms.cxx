@@ -21,6 +21,7 @@ TriggerHistograms::TriggerHistograms() :
   fhCentralityWeighted(0),
   fhPtHat(0),
   fhPtHatWeighted(0),
+  fhGenJetDeltaR(0),
   fhInclusiveJet(0),
   fhLeadingJet(0),
   fCard(0)
@@ -40,6 +41,7 @@ TriggerHistograms::TriggerHistograms(ConfigurationCard *newCard) :
   fhCentralityWeighted(0),
   fhPtHat(0),
   fhPtHatWeighted(0),
+  fhGenJetDeltaR(0),
   fhInclusiveJet(0),
   fhLeadingJet(0),
   fCard(newCard)
@@ -59,6 +61,7 @@ TriggerHistograms::TriggerHistograms(const TriggerHistograms& in) :
   fhCentralityWeighted(in.fhCentralityWeighted),
   fhPtHat(in.fhPtHat),
   fhPtHatWeighted(in.fhPtHatWeighted),
+  fhGenJetDeltaR(in.fhGenJetDeltaR),
   fhInclusiveJet(in.fhInclusiveJet),
   fhLeadingJet(in.fhLeadingJet),
   fCard(in.fCard)
@@ -82,6 +85,7 @@ TriggerHistograms& TriggerHistograms::operator=(const TriggerHistograms& in){
   fhCentralityWeighted = in.fhCentralityWeighted;
   fhPtHat = in.fhPtHat;
   fhPtHatWeighted = in.fhPtHatWeighted;
+  fhGenJetDeltaR = in.fhGenJetDeltaR;
   fhInclusiveJet = in.fhInclusiveJet;
   fhLeadingJet = in.fhLeadingJet;
   fCard = in.fCard;
@@ -101,6 +105,7 @@ TriggerHistograms::~TriggerHistograms(){
   delete fhCentralityWeighted;
   delete fhPtHat;
   delete fhPtHatWeighted;
+  delete fhGenJetDeltaR;
   delete fhInclusiveJet;
   delete fhLeadingJet;
 }
@@ -167,6 +172,11 @@ void TriggerHistograms::CreateHistograms(){
   const Double_t maxTriggerSelection = knTriggerTypes+0.5;
   const Int_t nTriggerSelectionBins = knTriggerTypes+1;
   
+  // DeltaR for E-scheme axis vs. WTA axis
+  const Double_t minDeltaR = 0;
+  const Double_t maxDeltaR = 4;
+  const Int_t nDeltaRbins = 80;
+  
   // Centrality bins for THnSparses (We run into memory issues, if have all the bins)
   const Int_t nWideCentralityBins = fCard->GetNBin("CentralityBinEdges");
   Double_t wideCentralityBins[nWideCentralityBins+1];
@@ -195,6 +205,7 @@ void TriggerHistograms::CreateHistograms(){
   fhCentralityWeighted = new TH1F("centralityWeighted","centralityWeighted",nCentralityBins,minCentrality,maxCentrality); fhCentralityWeighted->Sumw2();
   fhPtHat = new TH1F("pthat","pthat",nPtHatBins,ptHatBins); fhPtHat->Sumw2();
   fhPtHatWeighted = new TH1F("pthatWeighted","pthatWeighted",nFinePtHatBins,minPtHat,maxPtHat); fhPtHatWeighted->Sumw2();
+  fhGenJetDeltaR = new TH1F("genJetDeltaR","genJetDeltaR",nDeltaRbins,minDeltaR,maxDeltaR); fhGenJetDeltaR->Sumw2();
   
   // For the event histogram, label each bin corresponding to an event cut
   for(Int_t i = 0; i < knEventTypes; i++){
@@ -258,6 +269,7 @@ void TriggerHistograms::Write() const{
   fhCentralityWeighted->Write();
   fhPtHat->Write();
   fhPtHatWeighted->Write();
+  fhGenJetDeltaR->Write();
   fhInclusiveJet->Write();
   fhLeadingJet->Write();
   

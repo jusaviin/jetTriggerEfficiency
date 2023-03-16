@@ -43,6 +43,7 @@ public:
   TH1F *fhCentralityWeighted;      // Weighted centrality distribution (only meaningful for MC)
   TH1F *fhPtHat;                   // pT hat for MC events (only meaningful for MC)
   TH1F *fhPtHatWeighted;           // Weighted pT hat distribution
+  TH1F *fhGenJetDeltaR;            // Generator level jet deltaR between e-scheme and WTA
   THnSparseF *fhInclusiveJet;      // Inclusive jet information. Axes: [jet pT][jet phi][jet eta][cent][reco/gen][trigger]
   THnSparseF *fhLeadingJet;        // Leading jet information. Axes: [jet pT][jet phi][jet eta][cent][reco/gen][trigger]
   

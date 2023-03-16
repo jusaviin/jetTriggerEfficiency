@@ -264,10 +264,13 @@ void TriggerAnalyzer::RunAnalysis(){
   Double_t jetPt = 0;               // pT of the i:th jet in the event
   Double_t jetPhi = 0;              // phi of the i:th jet in the event
   Double_t jetEta = 0;              // eta of the i:th jet in the event
+  Double_t jetWTAPhi = 0;           // WTA phi of the i:th jet in the event
+  Double_t jetWTAEta = 0;           // WTA eta of the i:th jet in the event
   Double_t jetPtWeight = 1;         // Weighting for jet pT
   Double_t leadingJetPt = 0;        // Leading jet pT
   Double_t leadingJetEta = 0;       // Leading jet eta
   Double_t leadingJetPhi = 0;       // Leading jet phi
+  Double_t deltaRaxes = 0;          // DeltaR between WTA and Escheme axes
   
   // File name helper variables
   TString currentFile;
@@ -503,6 +506,8 @@ void TriggerAnalyzer::RunAnalysis(){
           jetPt = fJetReader->GetGeneratorJetPt(jetIndex);
           jetPhi = fJetReader->GetGeneratorJetPhi(jetIndex);
           jetEta = fJetReader->GetGeneratorJetEta(jetIndex);
+          jetWTAPhi = fJetReader->GetGeneratorJetWTAPhi(jetIndex);
+          jetWTAEta = fJetReader->GetGeneratorJetWTAEta(jetIndex);
           
           //  ==========================================
           //  ======== Apply jet kinematic cuts ========
@@ -533,6 +538,10 @@ void TriggerAnalyzer::RunAnalysis(){
           fillerJet[5] = TriggerHistograms::knTriggerTypes;    // Axis 5 = Trigger selection
           
           fHistograms->fhInclusiveJet->Fill(fillerJet,fTotalEventWeight*jetPtWeight); // Fill the data point to histogram
+          
+          // Fill the deltaR between WTA and E-schame axes
+          deltaRaxes = GetDeltaR(jetEta, jetPhi, jetWTAEta, jetWTAPhi);
+          fHistograms->fhGenJetDeltaR->Fill(deltaRaxes, fTotalEventWeight*jetPtWeight);
           
           // Apply a trigger selection on top of the base trigger to evaluate the trigger efficiency of the other triggers
           for(Int_t iTrigger = 0; iTrigger < TriggerHistograms::knTriggerTypes; iTrigger++){
@@ -675,4 +684,29 @@ Bool_t TriggerAnalyzer::PassEventCuts(ForestReader *eventReader){
  */
 TriggerHistograms* TriggerAnalyzer::GetHistograms() const{
   return fHistograms;
+}
+
+/*
+ * Get deltaR between two objects
+ *
+ *  Arguments:
+ *   const Double_t eta1 = Eta of the first object
+ *   const Double_t phi1 = Phi of the first object
+ *   const Double_t eta2 = Eta of the second object
+ *   const Double_t phi2 = Phi of the second object
+ *
+ *  return: DeltaR between the two objects
+ */
+Double_t TriggerAnalyzer::GetDeltaR(const Double_t eta1, const Double_t phi1, const Double_t eta2, const Double_t phi2) const{
+
+  Double_t deltaEta = eta1 - eta2;
+  Double_t deltaPhi = phi1 - phi2;
+  
+  // Transform deltaPhi to interval [-pi,pi]
+  while(deltaPhi > TMath::Pi()){deltaPhi += -2*TMath::Pi();}
+  while(deltaPhi < -TMath::Pi()){deltaPhi += 2*TMath::Pi();}
+  
+  // Return the distance between the objects
+  return TMath::Sqrt(deltaPhi*deltaPhi + deltaEta*deltaEta);
+  
 }
