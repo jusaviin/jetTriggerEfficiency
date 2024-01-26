@@ -3,8 +3,6 @@ version       = EEC
 CXX           = g++
 CXXFLAGS      = -O -Wall -fPIC -D$(version) # Add -g for debugger
 LD            = g++
-LDFLAGS       = -O
-SOFLAGS       = -shared
 #############################################
 # -bind_at_load helps to remove linker error
 ############################################
@@ -13,7 +11,7 @@ LDFLAGS  = $(shell root-config --libs)
 
 CXXFLAGS  += $(INCS)
 
-HDRS	+= TriggerHistogramManager.h TriggerCard.h
+HDRS	+= TriggerHistogramManager.h TriggerCard.h AlgorithmLibrary.h
 DEPENDENCIES += ../src/TriggerHistograms.o ../src/ConfigurationCard.o
 
 SRCS = $(HDRS:.h=.cxx)
@@ -23,7 +21,7 @@ all:            $(PROGRAM)
 
 $(PROGRAM) :    $(OBJS)
 		@echo "Linking $(PROGRAM) ..."
-		$(CXX) -shared -lEG -lPhysics -L$(PWD) $(CXXFLAGS) $(OBJS) $(DEPENDENCIES) $(LDFLAGS) -o $(PROGRAM).so
+		$(CXX) -shared -lEG -L$(PWD) $(CXXFLAGS) $(OBJS) $(DEPENDENCIES) $(LDFLAGS) -o $(PROGRAM).so
 		@echo "done"
 
 %.cxx:

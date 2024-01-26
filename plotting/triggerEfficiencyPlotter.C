@@ -1,6 +1,7 @@
 #include "TriggerHistogramManager.h" R__LOAD_LIBRARY(plotting/DrawingClasses.so)
 #include "TriggerCard.h"
 #include "JDrawer.h"
+#include "AlgorithmLibrary.h"
 #include "../src/TriggerHistograms.h"
 
 /*
@@ -38,7 +39,7 @@ void triggerEfficiencyPlotter(){
   // ====================================================
   
   // Select which triggers to compare
-  vector<int> triggerComparisonIndex{TriggerHistograms::kCalo100, TriggerHistograms::kCalo80};
+  vector<int> triggerComparisonIndex{TriggerHistograms::kCalo100, TriggerHistograms::kCalo80, TriggerHistograms::kCalo60};
   
   // Select which histograms to draw
   const bool drawSingleTurnOns = false;
@@ -46,13 +47,20 @@ void triggerEfficiencyPlotter(){
   
   // Select which jet distribution to use for drawing
   bool drawJets[TriggerHistogramManager::knJetTypes];
-  drawJets[TriggerHistogramManager::kInclusiveJet] = true;
-  drawJets[TriggerHistogramManager::kLeadingJet] = false;
+  drawJets[TriggerHistogramManager::kInclusiveJet] = false;
+  drawJets[TriggerHistogramManager::kLeadingJet] = true;
   
   // Figure saving
-  const bool saveFigures = true;  // Save figures
-  const char* saveComment = "_base60Comparison";   // Comment given for this specific file
+  const bool saveFigures = false;  // Save figures
+  const char* saveComment = "_base40Comparison";   // Comment given for this specific file
   const char* figureFormat = "pdf"; // Format given for the figures
+
+  // Rebinning options for trigger efficiency histograms
+  bool doRebin = true;
+  const int nBinsAfterRebin = 30;
+  double binBordersAfterRebin[nBinsAfterRebin+1] = {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,130,140,160,200,300,500};
+
+  AlgorithmLibrary *rebinner = new AlgorithmLibrary();
   
   // Create and setup a new histogram managers to project and handle the histograms
   TriggerHistogramManager *histograms;
@@ -81,6 +89,11 @@ void triggerEfficiencyPlotter(){
     for(int iCentrality = 0; iCentrality < nCentralityBins; iCentrality++){
       for(int iTrigger = 0; iTrigger <= TriggerHistograms::knTriggerTypes; iTrigger++){
         hJetPt[iJetType][iTrigger][iCentrality] = histograms->GetHistogramJetPt(iJetType, iCentrality, TriggerHistograms::kReconstructed, iTrigger);
+
+        // Option to rebin the trigger efficiency histograms
+        if(doRebin){
+          hJetPt[iJetType][iTrigger][iCentrality] = rebinner->RebinAsymmetric(hJetPt[iJetType][iTrigger][iCentrality], nBinsAfterRebin, binBordersAfterRebin);
+        }
       } // Trigger selection loop
     } // Centrality loop
   } // Jet type loop
