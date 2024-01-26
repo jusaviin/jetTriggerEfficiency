@@ -10,7 +10,7 @@
 void triggerEfficiencyPlotter(){
   
   // File containing the base trigger jet spectrum and selected trigger jet spectra on top of that
-  TString fileName = "data/triggerAnalysis_pp_akPfJets_eta1v6_baseCalo40_450kEvents_processed_2023-03-07.root";
+  TString fileName = "data/triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root";
   
   // triggerAnalysis_akFlowJets_cutBadPhi_eta1v6_baseCalo60_processed_2023-03-01.root
   // triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root
@@ -39,7 +39,7 @@ void triggerEfficiencyPlotter(){
   // ====================================================
   
   // Select which triggers to compare
-  vector<int> triggerComparisonIndex{TriggerHistograms::kCalo100, TriggerHistograms::kCalo80, TriggerHistograms::kCalo60};
+  vector<int> triggerComparisonIndex{TriggerHistograms::kCalo100, TriggerHistograms::kCalo80};
   
   // Select which histograms to draw
   const bool drawSingleTurnOns = false;
@@ -47,18 +47,19 @@ void triggerEfficiencyPlotter(){
   
   // Select which jet distribution to use for drawing
   bool drawJets[TriggerHistogramManager::knJetTypes];
-  drawJets[TriggerHistogramManager::kInclusiveJet] = false;
-  drawJets[TriggerHistogramManager::kLeadingJet] = true;
+  drawJets[TriggerHistogramManager::kInclusiveJet] = true;
+  drawJets[TriggerHistogramManager::kLeadingJet] = false;
   
   // Figure saving
-  const bool saveFigures = false;  // Save figures
-  const char* saveComment = "_base40Comparison";   // Comment given for this specific file
+  const bool saveFigures = true;  // Save figures
+  const char* saveComment = "_base60Comparison";   // Comment given for this specific file
   const char* figureFormat = "pdf"; // Format given for the figures
 
   // Rebinning options for trigger efficiency histograms
   bool doRebin = true;
-  const int nBinsAfterRebin = 30;
-  double binBordersAfterRebin[nBinsAfterRebin+1] = {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,130,140,160,200,300,500};
+  const int nBinsAfterRebin = 22;
+  double binBordersAfterRebin[nBinsAfterRebin+1] = {0,5,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,120,140,160,200,300,500};
+  //double binBordersAfterRebin[nBinsAfterRebin+1] = {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,130,140,160,200,300,500};
 
   AlgorithmLibrary *rebinner = new AlgorithmLibrary();
   
