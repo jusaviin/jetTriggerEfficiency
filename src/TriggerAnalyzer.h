@@ -27,7 +27,7 @@ public:
   
   // Constructors and destructor
   TriggerAnalyzer(); // Default constructor
-  TriggerAnalyzer(std::vector<TString> fileNameVector, ConfigurationCard *newCard); // Custom constructor
+  TriggerAnalyzer(std::vector<TString> fileNameVector, ConfigurationCard* newCard); // Custom constructor
   TriggerAnalyzer(const TriggerAnalyzer& in); // Copy constructor
   virtual ~TriggerAnalyzer(); // Destructor
   TriggerAnalyzer& operator=(const TriggerAnalyzer& obj); // Equal sign operator
@@ -41,20 +41,20 @@ private:
   // Private methods
   void ReadConfigurationFromCard(); // Read all the configuration from the input card
   
-  Bool_t PassEventCuts(ForestReader *eventReader); // Check if the event passes the event cuts
+  Bool_t PassEventCuts(ForestReader* eventReader); // Check if the event passes the event cuts
   Double_t GetVzWeight(const Double_t vz) const;  // Get the proper vz weighting depending on analyzed system
   Double_t GetCentralityWeight(const Int_t hiBin) const; // Get the proper centrality weighting depending on analyzed system
   Double_t GetJetPtWeight(const Double_t jetPt) const; // Get the proper jet pT weighting for 2017 and 2018 MC
   
   // Private data members
-  ForestReader *fJetReader;                 // Reader for jets in the event
+  ForestReader* fJetReader;                 // Reader for jets in the event
   std::vector<TString> fFileNames;          // Vector for all the files to loop over
-  ConfigurationCard *fCard;                 // Configuration card for the analysis
-  TriggerHistograms *fHistograms;           // Filled histograms
-  TF1 *fVzWeightFunction;                   // Weighting function for vz. Needed for MC.
-  TF1 *fCentralityWeightFunctionCentral;    // Weighting function for central centrality classes. Needed for MC.
-  TF1 *fCentralityWeightFunctionPeripheral; // Weighting function for peripheral centrality classes. Needed for MC.
-  TF1 *fPtWeightFunction;                   // Weighting function for jet pT. Needed for MC.
+  ConfigurationCard* fCard;                 // Configuration card for the analysis
+  TriggerHistograms* fHistograms;           // Filled histograms
+  TF1* fVzWeightFunction;                   // Weighting function for vz. Needed for MC.
+  TF1* fCentralityWeightFunctionCentral;    // Weighting function for central centrality classes. Needed for MC.
+  TF1* fCentralityWeightFunctionPeripheral; // Weighting function for peripheral centrality classes. Needed for MC.
+  TF1* fPtWeightFunction;                   // Weighting function for jet pT. Needed for MC.
   
   // Analyzed data and forest types
   Int_t fDataType;                   // Analyzed data type

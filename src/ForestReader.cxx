@@ -359,16 +359,30 @@ void ForestReader::Initialize(){
   TriggerHistograms *triggerProvider = new TriggerHistograms();
   
   if(fDataType == kPp || fDataType == kPpMC){ // pp data or MC
+
+    if(fIsMiniAOD){
+
+      for(Int_t iTrigger = TriggerHistograms::kCalo15; iTrigger <= TriggerHistograms::kPF100; iTrigger++){
+        fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()),1);
+        fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetFilterBit[iTrigger], &fJetFilterBranch[iTrigger]);
+        fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_PrescaleNumerator", triggerProvider->GetTriggerName(iTrigger).Data()),1);
+        fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_PrescaleNumerator", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleNumerator[iTrigger], &fJetFilterPrescaleNumeratorBranch[iTrigger]);
+        fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_PrescaleDenominator", triggerProvider->GetTriggerName(iTrigger).Data()),1);
+        fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_PrescaleDenominator", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleDenominator[iTrigger], &fJetFilterPrescaleDenominatorBranch[iTrigger]);
+      }
+
+    } else {
     
-    for(Int_t iTrigger = TriggerHistograms::kCalo40; iTrigger <= TriggerHistograms::kPF100; iTrigger++){
-      fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()),1);
-      fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetFilterBit[iTrigger], &fJetFilterBranch[iTrigger]);
-      fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_Prescl", triggerProvider->GetTriggerName(iTrigger).Data()),1);
-      fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_Prescl", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleNumerator[iTrigger], &fJetFilterPrescaleNumeratorBranch[iTrigger]);
+      for(Int_t iTrigger = TriggerHistograms::kCalo15; iTrigger <= TriggerHistograms::kPF100; iTrigger++){
+        fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()),1);
+        fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetFilterBit[iTrigger], &fJetFilterBranch[iTrigger]);
+        fHltTree->SetBranchStatus(Form("HLT_HIAK4%s_v1_Prescl", triggerProvider->GetTriggerName(iTrigger).Data()),1);
+        fHltTree->SetBranchAddress(Form("HLT_HIAK4%s_v1_Prescl", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleNumerator[iTrigger], &fJetFilterPrescaleNumeratorBranch[iTrigger]);
       
-      
-      // Only integer prescales for AOD
-      fJetPrescaleDenominator[iTrigger] = 1;
+        // Only integer prescales for AOD
+        fJetPrescaleDenominator[iTrigger] = 1;
+      }
+
     }
 
   } else { // PbPb data or MC
@@ -389,6 +403,13 @@ void ForestReader::Initialize(){
       fHltTree->SetBranchStatus(Form("HLT_HICsAK4%sEta1p5_v1_PrescaleDenominator", triggerProvider->GetTriggerName(iTrigger).Data()),1);
       fHltTree->SetBranchAddress(Form("HLT_HICsAK4%sEta1p5_v1_PrescaleDenominator", triggerProvider->GetTriggerName(iTrigger).Data()), &fJetPrescaleDenominator[iTrigger], &fJetFilterPrescaleDenominatorBranch[iTrigger]);
     }
+
+    // There are no CaloJet15 or CaloJet30 triggers for PbPb
+    for(Int_t iTrigger = TriggerHistograms::kCalo15; iTrigger <= TriggerHistograms::kCalo30; iTrigger++){
+      fJetFilterBit[iTrigger] = 0;
+      fJetPrescaleNumerator[iTrigger] = 1;
+      fJetPrescaleDenominator[iTrigger] = 1;
+    }
     
   }
   
@@ -398,10 +419,17 @@ void ForestReader::Initialize(){
   fSkimTree->SetBranchStatus("*",0);
   // pprimaryVertexFilter && phfCoincFilter2Th4 && pclusterCompatibilityFilter
   if(fDataType == kPp || fDataType == kPpMC){ // pp data or MC
-    fSkimTree->SetBranchStatus("pPAprimaryVertexFilter",1);
-    fSkimTree->SetBranchAddress("pPAprimaryVertexFilter",&fPrimaryVertexFilterBit,&fPrimaryVertexBranch);
-    fSkimTree->SetBranchStatus("pBeamScrapingFilter",1);
-    fSkimTree->SetBranchAddress("pBeamScrapingFilter",&fBeamScrapingFilterBit,&fBeamScrapingBranch);
+
+    if(fIsMiniAOD){
+      fSkimTree->SetBranchStatus("pprimaryVertexFilter",1);
+      fSkimTree->SetBranchAddress("pprimaryVertexFilter",&fPrimaryVertexFilterBit,&fPrimaryVertexBranch);
+      fBeamScrapingFilterBit = 1;
+    } else {
+      fSkimTree->SetBranchStatus("pPAprimaryVertexFilter",1);
+      fSkimTree->SetBranchAddress("pPAprimaryVertexFilter",&fPrimaryVertexFilterBit,&fPrimaryVertexBranch);
+      fSkimTree->SetBranchStatus("pBeamScrapingFilter",1);
+      fSkimTree->SetBranchAddress("pBeamScrapingFilter",&fBeamScrapingFilterBit,&fBeamScrapingBranch);
+    }
     fHfCoincidenceFilterBit = 1; // No HF energy coincidence requirement for pp
     fClusterCompatibilityFilterBit = 1; // No cluster compatibility requirement for pp
   } else { // PbPb data or MC

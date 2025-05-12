@@ -10,8 +10,9 @@
 void triggerEfficiencyPlotter(){
   
   // File containing the base trigger jet spectrum and selected trigger jet spectra on top of that
-  TString fileName = "data/triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root";
+  TString fileName = "veryCoolData_processed.root";
   
+  // triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root
   // triggerAnalysis_akFlowJets_cutBadPhi_eta1v6_baseCalo60_processed_2023-03-01.root
   // triggerAnalysis_akFlowJets_includeLeading_eta1v6_baseCalo60_processed_2023-03-01.root
   // triggerAnalysis_akFlowJets_eta1v6_baseCalo40_processed_2023-02-22.root
@@ -39,11 +40,11 @@ void triggerEfficiencyPlotter(){
   // ====================================================
   
   // Select which triggers to compare
-  vector<int> triggerComparisonIndex{TriggerHistograms::kCalo100, TriggerHistograms::kCalo80};
+  vector<int> triggerComparisonIndex{TriggerHistograms::kCalo30, TriggerHistograms::kCalo15};
   
   // Select which histograms to draw
-  const bool drawSingleTurnOns = false;
-  const bool drawComparisons = true;
+  const bool drawSingleTurnOns = true;
+  const bool drawComparisons = false;
   
   // Select which jet distribution to use for drawing
   bool drawJets[TriggerHistogramManager::knJetTypes];
@@ -51,7 +52,7 @@ void triggerEfficiencyPlotter(){
   drawJets[TriggerHistogramManager::kLeadingJet] = false;
   
   // Figure saving
-  const bool saveFigures = true;  // Save figures
+  const bool saveFigures = false;  // Save figures
   const char* saveComment = "_base60Comparison";   // Comment given for this specific file
   const char* figureFormat = "pdf"; // Format given for the figures
 

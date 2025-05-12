@@ -250,7 +250,7 @@ void TriggerAnalyzer::RunAnalysis(){
   //************************************************
   
   // Input files and forest readers for analysis
-  TFile *inputFile;
+  TFile* inputFile;
   
   // Event variables
   Int_t nEvents = 0;                // Number of events
@@ -636,11 +636,11 @@ Double_t TriggerAnalyzer::GetJetPtWeight(const Double_t jetPt) const{
  * Check if the event passes all the track cuts
  *
  *  Arguments:
- *   ForestReader *eventReader = ForestReader containing the event information checked for event cuts
+ *   ForestReader* eventReader = ForestReader containing the event information checked for event cuts
  *
  *   return = True if all event cuts are passed, false otherwise
  */
-Bool_t TriggerAnalyzer::PassEventCuts(ForestReader *eventReader){
+Bool_t TriggerAnalyzer::PassEventCuts(ForestReader* eventReader){
 
   // Primary vertex has at least two tracks, is within 25 cm in z-rirection and within 2 cm in xy-direction. Only applied for data.
   if(eventReader->GetPrimaryVertexFilterBit() == 0) return false;

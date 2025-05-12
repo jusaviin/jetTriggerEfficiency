@@ -17,7 +17,7 @@ public:
   
   // Enumeration for event types to event histogram and track cuts for track cut histogram
   enum enumEventTypes {kAll, kPrimaryVertex, kHfCoincidence, kClusterCompatibility, kBeamScraping, kCaloJet, kVzCut, knEventTypes};
-  enum enumTriggerSelection {kCalo40, kCalo60, kCalo80, kCalo100, kPF60, kPF80, kPF100, knTriggerTypes};
+  enum enumTriggerSelection {kCalo15, kCalo30, kCalo40, kCalo60, kCalo80, kCalo100, kPF60, kPF80, kPF100, knTriggerTypes};
   enum enumDataLevel {kReconstructed, kGeneratorLevel, knDataLevels};
   
   // Constructors and destructor
@@ -50,7 +50,7 @@ private:
   
   ConfigurationCard *fCard;    // Card for binning info
   const TString kEventTypeStrings[knEventTypes] = {"All", "PrimVertex", "HfCoin2Th4", "ClustCompt", "BeamScrape", "CaloJet", "v_{z} cut"}; // Strings corresponding to event types
-  const TString kTriggerStrings[knTriggerTypes] = {"CaloJet40", "CaloJet60", "CaloJet80", "CaloJet100", "PFJet60", "PFJet80", "PFJet100"};
+  const TString kTriggerStrings[knTriggerTypes] = {"CaloJet15", "CaloJet30", "CaloJet40", "CaloJet60", "CaloJet80", "CaloJet100", "PFJet60", "PFJet80", "PFJet100"};
   
 };
 
